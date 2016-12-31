@@ -48,8 +48,13 @@ namespace Microsoft.Build.Logging.StructuredLogger
                     Build.StartTime = args.Timestamp;
 
                     Build.AddChild(new Property { Name = "Process", Value = Process.GetCurrentProcess().MainModule.FileName });
+#if NET451
                     Build.AddChild(new Property { Name = "Command Line", Value = Environment.CommandLine });
                     Build.AddChild(new Property { Name = "Current Directory", Value = Environment.CurrentDirectory });
+#else
+                    Build.AddChild(new Property { Name = "Command Line", Value = "UNKNOWN" });
+                    Build.AddChild(new Property { Name = "Current Directory", Value = "UNKNOWN" });
+#endif
 
                     var properties = Build.GetOrCreateNodeWithName<Folder>("Environment");
                     AddProperties(properties, args.BuildEnvironment);

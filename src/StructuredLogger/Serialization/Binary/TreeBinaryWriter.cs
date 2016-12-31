@@ -39,7 +39,12 @@ namespace Microsoft.Build.Logging.StructuredLogger
 
         private void WriteVersion()
         {
+#if NET451
             var version = Assembly.GetExecutingAssembly().GetName().Version;
+#else
+            var version = this.GetType().GetTypeInfo().Assembly.GetName().Version;
+#endif
+            
             fileStream.WriteByte((byte)version.Major);
             fileStream.WriteByte((byte)version.Minor);
             fileStream.WriteByte((byte)version.Build);
